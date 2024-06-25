@@ -45,15 +45,16 @@ jobs:
       run: terraform init
       working-directory: terraform/
 
-    - name: Terraform Apply
-      run: terraform apply -auto-approve
-      working-directory: terraform/
-
     - name: Package Lambda function
       run: |
         cd app
         # zip -r ../lambda_function_payload.zip .
         zip -qq -r lambda_function_payload.zip "app.py"
+
+    - name: Terraform Apply
+      run: terraform apply -auto-approve
+      working-directory: terraform/
+
 
     - name: Upload Lambda package to S3
       env:
