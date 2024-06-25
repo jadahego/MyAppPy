@@ -28,6 +28,10 @@ jobs:
       run: |
         cd tests
         pytest
+    
+    - name: Create lambda.zip
+      run: |
+        lambda_function_payload.zip "app.py"
 
   deploy:
     needs: build
