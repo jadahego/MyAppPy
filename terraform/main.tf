@@ -6,7 +6,7 @@ resource "aws_s3_bucket" "lambda_bucket" {
   bucket = "bbog-my-lambda-functions-bucket-jdhg"
 }
 
-resource "aws_iam_role" "lambda_exec" {
+resource "aws_iam_role" "lambda_exec-jdhg" {
   name = "lambda_exec_role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -21,15 +21,15 @@ resource "aws_iam_role" "lambda_exec" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_exec_policy" {
-  role       = aws_iam_role.lambda_exec.name
+resource "aws_iam_role_policy_attachment" "lambda_exec-jdhg_policy" {
+  role       = aws_iam_role.lambda_exec-jdhg.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
 resource "aws_lambda_function" "voting_function" {
   filename         = "lambda_function_payload.zip"
   function_name    = "votingFunction"
-  role             = aws_iam_role.lambda_exec.arn
+  role             = aws_iam_role.lambda_exec-jdhg.arn
   handler          = "lambda_function.lambda_handler"
   source_code_hash = filebase64sha256("../app/lambda_function_payload.zip")
   runtime          = "python3.8"
