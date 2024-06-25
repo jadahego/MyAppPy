@@ -1,5 +1,5 @@
 output "lambda_function_arn" {
-  value = aws_lambda_function.voting_function.arn
+  value = aws_lambda_function.voting_function-jdhg.arn
 }
 
 output "api_gateway_url" {
