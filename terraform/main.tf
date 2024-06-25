@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "lambda_bucket" {
-  bucket = "my-lambda-functions-bucket"
+  bucket = "bbog-my-lambda-functions-bucket-jdhg"
 }
 
 resource "aws_iam_role" "lambda_exec" {

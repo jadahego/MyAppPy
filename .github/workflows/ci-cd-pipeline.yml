@@ -64,11 +64,11 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
-        aws s3 cp lambda_function_payload.zip s3://my-lambda-functions-bucket/
+        aws s3 cp lambda_function_payload.zip s3://bbog-my-lambda-functions-bucket-jdhg/
 
     - name: Update Lambda function code
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
-        aws lambda update-function-code --function-name votingFunction --s3-bucket my-lambda-functions-bucket --s3-key lambda_function_payload.zip
+        aws lambda update-function-code --function-name votingFunction --s3-bucket bbog-my-lambda-functions-bucket-jdhg --s3-key lambda_function_payload.zip
