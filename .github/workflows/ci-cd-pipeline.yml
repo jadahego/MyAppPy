@@ -52,7 +52,8 @@ jobs:
     - name: Package Lambda function
       run: |
         cd app
-        zip -r ../lambda_function_payload.zip .
+        # zip -r ../lambda_function_payload.zip .
+        zip -qq -r lambda_function_payload.zip "app.py"
 
     - name: Upload Lambda package to S3
       env:
