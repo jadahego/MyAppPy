@@ -68,7 +68,7 @@ jobs:
 ######################## TEMPORAL ########################
     - name: Package Lambda function
       run: |
-        zip -r lambda_function_payload.zip app site-packages
+        zip -r lambda_function_payload.zip "app site-packages"
       
 
     - name: Terraform Init
