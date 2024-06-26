@@ -16,19 +16,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Cache Python dependencies
-      id: cache-python
-      uses: actions/cache@v2
-      with:
-        path: ~/
-        key: ${{ runner.os }}-build-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-build-
-
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
+
+    - name: Cache Python dependencies
+      id: cache-python
+      uses: actions/cache@v2
+      with:
+        path: ~/app_virtual_env/lib/python3.8/site-packages
+        key: ${{ runner.os }}-build-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-build-
 
     - if: steps.cache-python.outputs.cache-hit != 'true'
       name: Install dependencies
@@ -67,7 +67,7 @@ jobs:
     - name: Restore pip cache
       uses: actions/cache@v2
       with:
-        path: ~/
+        path: ~/app_virtual_env/lib/python3.8/site-packages
         key: ${{ runner.os }}-build-${{ hashFiles('**/requirements.txt') }}
         
 ######################## TEMPORAL ########################
