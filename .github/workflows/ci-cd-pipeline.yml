@@ -54,6 +54,12 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-venv-
 
+    - name: Set outputs
+      id: set-outputs
+      run: |
+        echo "::set-output name=cache-pip-key::${{ steps.cache-pip.outputs.cache-hit }}"
+        echo "::set-output name=cache-venv-key::${{ steps.cache-venv.outputs.cache-hit }}"
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -81,13 +87,13 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/.cache/pip
-        key: ${{ needs.build.outputs.cache-pip }}
+        key: ${{ needs.build.outputs.cache-pip-key }}
 
     - name: Restore virtualenv cache
       uses: actions/cache@v2
       with:
         path: app/app_virtual_env
-        key: ${{ needs.build.outputs.cache-venv }}
+        key: ${{ needs.build.outputs.cache-venv-key }}
 
     - name: Package Lambda function
       run: |
