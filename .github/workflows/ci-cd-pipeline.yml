@@ -71,4 +71,4 @@ jobs:
 
     - name: Update Lambda function code
       run: |
-        aws lambda update-function-code --function-name votingFunctionjdhg --s3-bucket bbog-my-lambda-functions-bucket-jdhg --s3-key ./app/lambda_function_payload.zip
+        aws lambda update-function-code --function-name votingFunctionjdhg --s3-bucket bbog-my-lambda-functions-bucket-jdhg --s3-key /lambda_function_payload.zip
