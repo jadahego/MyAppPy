@@ -21,15 +21,29 @@ def lambda_handler(event, context):
     print("context")
     print(context_json)
 
-    # Manejar el evento con awsgi
-    try:
-        return awsgi.response(app, event, context)
-    except KeyError as e:
-        # Manejo del KeyError si 'httpMethod' no está presente
+    # Verificar la presencia de 'httpMethod' en el evento
+    if 'httpMethod' not in event:
+        error_message = "Missing key: 'httpMethod'"
+        print(error_message)  # Para registro en los logs de CloudWatch
         return {
             'statusCode': 400,
             'body': json.dumps({
-                'errorMessage': f"Missing key: {e}",
+                'errorMessage': error_message,
+                'event': event
+            })
+        }
+
+    # Manejar el evento con awsgi
+    try:
+        return awsgi.response(app, event, context)
+    except Exception as e:
+        # Manejar cualquier excepción no anticipada y devolver un error 500
+        error_message = f"Internal server error: {str(e)}"
+        print(error_message)  # Para registro en los logs de CloudWatch
+        return {
+            'statusCode': 500,
+            'body': json.dumps({
+                'errorMessage': error_message,
                 'event': event
             })
         }
