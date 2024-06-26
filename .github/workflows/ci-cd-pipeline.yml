@@ -16,27 +16,29 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Cache Python dependencies
-      id: cache-python
+    - name: Cache pip modules
+      id: cache-pip
       uses: actions/cache@v3
       env:
-        cache-name: cache-python-modules
+        cache-name: cache-pip-modules
       with:
-        path: |
-          ~/.cache/pip
-          ./app/app_virtual_env
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/requirements.txt') }}
+        path: ~/.app
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('app/app_virtual_env/lib/python3.8/site-packages') }}
         restore-keys: |
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
           ${{ runner.os }}-
+      
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
 
-    - if: ${{ steps.cache-python.outputs.cache-hit != 'true' }}
+    - if: ${{ steps.cache-pip.outputs.cache-hit != 'true' }}
       name: Install dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install python3-venv  
-        python3 -m venv app_virtual_env     
+        pip install virtualenv
+        virtualenv app_virtual_env
         source ./app_virtual_env/bin/activate
         python -m pip install --upgrade pip
         pip install -r app/requirements.txt
@@ -47,6 +49,7 @@ jobs:
         cd tests
         source ../app_virtual_env/bin/activate
         pytest
+    
 
   deploy:
     needs: build
@@ -55,10 +58,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v1
-
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
@@ -66,6 +67,23 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
+######################## TEMPORAL ########################
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install dependencies
+      run: |
+        cd app
+        pip install virtualenv
+        virtualenv app_virtual_env
+        source ./app_virtual_env/bin/activate
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        deactivate
+        
+######################## TEMPORAL ########################
     - name: Package Lambda function
       run: |
         cd app/app_virtual_env/lib/python3.8/site-packages
