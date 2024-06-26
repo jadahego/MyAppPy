@@ -23,7 +23,7 @@ jobs:
 
     - name: Cread venv
       run: |
-        python -m venv .venv
+        python3 -m venv .venv
 
     - name: Cache Python dependencies
       id: cache-python
