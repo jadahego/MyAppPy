@@ -20,7 +20,7 @@ jobs:
       id: cache-python
       uses: actions/cache@v2
       with:
-        path: ~/
+        path: ~/app/
         key: ${{ runner.os }}-build-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-build-
@@ -33,6 +33,7 @@ jobs:
     - if: steps.cache-python.outputs.cache-hit != 'true'
       name: Install dependencies
       run: |
+        cd app
         python3 -m venv .venv
         source .venv/bin/activate
         python -m pip install --upgrade pip
@@ -42,7 +43,7 @@ jobs:
     - name: Run tests
       run: |
         cd tests
-        source ../.venv/bin/activate
+        source ../app/.venv/bin/activate
         pytest
     
 
