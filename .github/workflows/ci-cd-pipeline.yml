@@ -75,7 +75,7 @@ jobs:
         cd dependencies
         zip -r ../dependencies.zip .
         cd ..
-        zip -qq -r lambda_function_payload.zip "app.py requirements.txt dependencies.zip"
+        zip -r lambda_function_payload.zip app.py dependencies.zip
 
     - name: Terraform Apply
       run: terraform apply -auto-approve
