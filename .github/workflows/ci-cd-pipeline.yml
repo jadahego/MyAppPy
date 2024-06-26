@@ -77,7 +77,7 @@ jobs:
         cp -r * ../../../../
         cd ../../../../
         cd ..
-        zip -r lambda_function_payload.zip app
+        zip -r lambda_function_payload.zip "app.py lambda_function.py requirements.txt"
         cd ..
 
     - name: Terraform Init
