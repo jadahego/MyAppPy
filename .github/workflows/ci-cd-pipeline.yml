@@ -16,41 +16,44 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Cache pip modules
-      id: cache-pip
+    - name: Cache Python dependencies
+      id: cache-python
       uses: actions/cache@v3
-      env:
-        cache-name: cache-pip-modules
       with:
-        path: ~/.app
+        path: |
+          ~/.cache/pip
           app_virtual_env
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('app/app_virtual_env/lib/python3.8/site-packages') }}
+        key: ${{ runner.os }}-build-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
-          ${{ runner.os }}-
-      
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
 
-    - if: ${{ steps.cache-pip.outputs.cache-hit != 'true' }}
+    - if: steps.cache-python.outputs.cache-hit != 'true'
       name: Install dependencies
       run: |
-        pip install virtualenv
-        virtualenv app_virtual_env
-        source ./app_virtual_env/bin/activate
+        python -m venv app_virtual_env
+        source app_virtual_env/bin/activate
         python -m pip install --upgrade pip
         pip install -r app/requirements.txt
         pip install pytest
 
     - name: Run tests
       run: |
-        cd tests
-        source ../app_virtual_env/bin/activate
-        pytest
-    
+        source app_virtual_env/bin/activate
+        pytest tests
+
+    - name: Cache the virtual environment
+      if: always()
+      uses: actions/cache@v3
+      with:
+        path: app_virtual_env
+        key: ${{ runner.os }}-build-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-build-
 
   deploy:
     needs: build
@@ -64,30 +67,21 @@ jobs:
       uses: actions/cache@v3
       with:
         path: app_virtual_env
-        key: ${{ runner.os }}-build-${{ hashFiles('app/app_virtual_env/lib/python3.8/site-packages') }}
+        key: ${{ runner.os }}-build-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-build-
 
-    - name: Set up Terraform
-      uses: hashicorp/setup-terraform@v1
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v4
+    - name: Set up Python
+      uses: actions/setup-python@v2
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
+        python-version: 3.8
 
-######################## TEMPORAL ########################
-   
-        
-######################## TEMPORAL ########################
     - name: Package Lambda function
       run: |
-        cd app/app_virtual_env/lib/python3.8/site-packages
-        cp -r * ../../../../
-        cd ../../../../
+        source app_virtual_env/bin/activate
+        cd app_virtual_env/lib/python3.8/site-packages
         zip -r lambda_function_payload.zip .
-        cd ..
+        mv lambda_function_payload.zip ../../../..
 
     - name: Terraform Init
       run: terraform init
@@ -98,9 +92,7 @@ jobs:
       working-directory: terraform/
 
     - name: Upload Lambda package to S3
-      run: |
-        aws s3 cp ./app/lambda_function_payload.zip s3://bbog-my-lambda-functions-bucket-jdhg/
+      run: aws s3 cp lambda_function_payload.zip s3://bbog-my-lambda-functions-bucket-jdhg/
 
     - name: Update Lambda function code
-      run: |
-        aws lambda update-function-code --function-name votingFunctionjdhg --s3-bucket bbog-my-lambda-functions-bucket-jdhg --s3-key lambda_function_payload.zip
+      run: aws lambda update-function-code --function-name votingFunctionjdhg --s3-bucket bbog-my-lambda-functions-bucket-jdhg --s3-key lambda_function_payload.zip
