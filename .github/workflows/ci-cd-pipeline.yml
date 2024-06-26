@@ -20,10 +20,9 @@ jobs:
       id: cache-python
       uses: actions/cache@v3
       with:
-        path: ~/.venv
-        key: ${{ runner.os }}-build-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-build-
+        path: app/site-packages
+        key: ${{ runner.os }}-1-build-${{ hashFiles('app/requirements.txt') }}
+        restore-keys: ${{ runner.os }}-1-build-
     
     - name: Set up Python
       uses: actions/setup-python@v2
@@ -64,12 +63,32 @@ jobs:
         aws-region: ${{ env.AWS_REGION }}
 
 ######################## TEMPORAL ########################
-        
+
+    - name: Cache Python dependencies
+      id: cache-python
+      uses: actions/cache@v3
+      with:
+        path: app/site-packages
+        key: ${{ runner.os }}-1-build-${{ hashFiles('app/requirements.txt') }}
+        restore-keys: ${{ runner.os }}-1-build-
+
+    - if: steps.cache-python.outputs.cache-hit != 'true'
+      name: Install dependencies
+      run: |
+        python3 -m venv .venv
+        source .venv/bin/activate
+        python -m pip install --upgrade pip
+        pip install -r ./app/requirements.txt
+        pip install pytest
+        cp -r .venv/lib/python3.8/site-packages ./app/site-packages
+
 ######################## TEMPORAL ########################
     - name: Package Lambda function
       run: |
-       cd app 
-       zip -r lambda_function_payload.zip app 
+       cd app
+       cp -r site-packages/* .
+       zip -r lambda_function_payload.zip .
+       cd ..
       
 
     - name: Terraform Init
