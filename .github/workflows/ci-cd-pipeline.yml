@@ -16,12 +16,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-
-
     - name: Cache Python dependencies
       id: cache-python
       uses: actions/cache@v2
@@ -31,6 +25,11 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-build-
     
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8    
+               
     - name: Cread venv
       run: |
         python3 -m venv .venv
