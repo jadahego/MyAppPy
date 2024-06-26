@@ -19,12 +19,8 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
-
-    - name: Cread venv
-      run: |
-        python3 -m venv .venv
-        source .venv/bin/activate
+        python-version: 3.8|
+        
 
     - name: Cache Python dependencies
       id: cache-python
@@ -38,7 +34,8 @@ jobs:
     - if: steps.cache-python.outputs.cache-hit != 'true'
       name: Install dependencies
       run: |
-        cd ~/.venv/lib/python3.8/site-packages
+        python3 -m venv .venv
+        source .venv/bin/activate
         python -m pip install --upgrade pip
         pip install -r ./app/requirements.txt
         pip install pytest
