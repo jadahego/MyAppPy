@@ -57,8 +57,8 @@ jobs:
     - name: Set outputs
       id: set-outputs
       run: |
-        echo "::set-output name=cache-pip-key::${{ steps.cache-pip.outputs.cache-hit }}"
-        echo "::set-output name=cache-venv-key::${{ steps.cache-venv.outputs.cache-hit }}"
+        echo "CACHE_PIP_KEY=${{ steps.cache-pip.outputs.cache-hit }}" >> $GITHUB_ENV
+        echo "CACHE_VENV_KEY=${{ steps.cache-venv.outputs.cache-hit }}" >> $GITHUB_ENV
 
   deploy:
     needs: build
@@ -87,13 +87,13 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/.cache/pip
-        key: ${{ needs.build.outputs.cache-pip-key }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
 
     - name: Restore virtualenv cache
       uses: actions/cache@v2
       with:
         path: app/app_virtual_env
-        key: ${{ needs.build.outputs.cache-venv-key }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
 
     - name: Package Lambda function
       run: |
