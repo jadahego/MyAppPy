@@ -39,8 +39,7 @@ jobs:
         pip install pytest
         cp -r .venv/lib/python3.8/site-packages ./app/site-packages
 
-    - if: steps.cache-python.outputs.cache-hit != 'true'
-      name: Run tests
+    - name: Run tests
       run: |
         cd tests
         source ../.venv/bin/activate
@@ -49,7 +48,7 @@ jobs:
     - if: steps.cache-python.outputs.cache-hit == 'true'
       name: Run tests 2
       run: |
-        cp -r ./app/site-packages/* ./tests/site-packages
+        cp -r ./app/site-packages ./tests/site-packages
         cd tests
         pytest
 
