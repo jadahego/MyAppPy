@@ -20,7 +20,7 @@ jobs:
       id: cache-python
       uses: actions/cache@v2
       with:
-        path: ~/
+        path: ~/app/
         key: ${{ runner.os }}-build-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-build-
@@ -33,16 +33,17 @@ jobs:
     - if: steps.cache-python.outputs.cache-hit != 'true'
       name: Install dependencies
       run: |
+        cd app
         python3 -m venv .venv
         source .venv/bin/activate
         python -m pip install --upgrade pip
-        pip install -r ./app/requirements.txt
+        pip install -r ./requirements.txt
         pip install pytest
 
     - name: Run tests
       run: |
         cd tests
-        source ../.venv/bin/activate
+        source ../app/.venv/bin/activate
         pytest
     
 
@@ -62,7 +63,7 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
-######################## TEMPORAL #######################
+######################## TEMPORAL ######################## 
 
     - name: Restore pip cache
       uses: actions/cache@v2
@@ -74,6 +75,7 @@ jobs:
     - name: Package Lambda function
       run: |
         cd app
+        cp -r * 
         zip -r lambda_function_payload.zip .
         cd ..
 
