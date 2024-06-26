@@ -33,7 +33,6 @@ jobs:
     - if: steps.cache-python.outputs.cache-hit != 'true'
       name: Install dependencies
       run: |
-        cd app
         python -m venv app_virtual_env
         source app_virtual_env/bin/activate
         python -m pip install --upgrade pip
@@ -42,7 +41,7 @@ jobs:
 
     - name: Run tests
       run: |
-        source ./app/app_virtual_env/bin/activate
+        source ./app_virtual_env/bin/activate
         cd tests
         pytest
     
