@@ -35,8 +35,8 @@ jobs:
       name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install python3.8-venv  # Instala el gestor de entornos virtuales para Python 3.8
-        python3.8 -m venv app_virtual_env     # Crea el entorno virtual
+        sudo apt-get install python3-venv  
+        python3 -m venv app_virtual_env     
         source ./app_virtual_env/bin/activate
         python -m pip install --upgrade pip
         pip install -r app/requirements.txt
