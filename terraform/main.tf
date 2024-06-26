@@ -27,7 +27,7 @@ resource "aws_iam_role_policy_attachment" "lambda_exec_jdhg_policy" {
 }
 
 resource "aws_lambda_function" "voting_function_jdhg" {
-  filename         = "../app/lambda_function_payload.zip" 
+  filename         = "../app/lambda_function_payload.zip"
   function_name    = "votingFunctionjdhg"
   role             = aws_iam_role.lambda_exec_jdhg.arn
   handler          = "lambda_function.lambda_handler"
@@ -109,5 +109,10 @@ resource "aws_api_gateway_deployment" "voting_api_deployment" {
 }
 
 output "api_url" {
-  value = aws_api_gateway_rest_api.voting_api.execution_invoke_url
+  value = aws_api_gateway_deployment.voting_api_deployment.invoke_url
 }
+
+output "lambda_function_arn" {
+  value = aws_lambda_function.voting_function_jdhg.arn
+}
+
