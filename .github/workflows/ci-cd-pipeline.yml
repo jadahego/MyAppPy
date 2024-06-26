@@ -71,14 +71,14 @@ jobs:
     - name: Restore pip cache
       uses: actions/cache@v2
       with:
-        path: ~/
+        path: ~/.venv/lib/python3.8/site-packages
         key: ${{ runner.os }}-build-${{ hashFiles('**/requirements.txt') }}
         
 ######################## TEMPORAL ########################
     - name: Package Lambda function
       run: |
         cd ~/
-        cd .venv/lib/
+        cd .venv/lib/python3.8/site-packages
         cp -r * ../../../../
         cd ../../../../
         zip -r lambda_function_payload.zip .
