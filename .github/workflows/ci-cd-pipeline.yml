@@ -34,7 +34,6 @@ jobs:
     - if: ${{ steps.cache-python.outputs.cache-hit != 'true' }}
       name: Install dependencies
       run: |
-        sudo apt-get update
         sudo apt-get install python3.8-venv  
         python3.8 -m venv app_virtual_env     
         source ./app_virtual_env/bin/activate
@@ -68,7 +67,7 @@ jobs:
 
     - name: Cache
       uses: Cache Python dependencies
-      
+
     - name: Package Lambda function
       run: |
         cd app/app_virtual_env/lib/python3.8/site-packages
