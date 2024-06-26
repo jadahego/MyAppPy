@@ -20,7 +20,7 @@ jobs:
       id: cache-python
       uses: actions/cache@v2
       with:
-        path: ~/.venv/lib/python3.8/site-packages
+        path: ~/
         key: ${{ runner.os }}-build-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-build-
@@ -38,7 +38,7 @@ jobs:
     - if: steps.cache-python.outputs.cache-hit != 'true'
       name: Install dependencies
       run: |
-        source ../.venv/bin/activate
+        source .venv/bin/activate
         python -m pip install --upgrade pip
         pip install -r ./app/requirements.txt
         pip install pytest
@@ -71,7 +71,7 @@ jobs:
     - name: Restore pip cache
       uses: actions/cache@v2
       with:
-        path: ~/.venv/lib/python3.8/site-packages
+        path: ~/
         key: ${{ runner.os }}-build-${{ hashFiles('**/requirements.txt') }}
         
 ######################## TEMPORAL ########################
