@@ -29,8 +29,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r app/requirements.txt
         pip install pytest
-        #deactivate
-        #cd app_virtual_env/lib/python3.8/site-packages
 
     - name: Run tests
       run: |
@@ -74,6 +72,7 @@ jobs:
 ######################## TEMPORAL ########################
     - name: Package Lambda function
       run: |
+        cd app
         cd ./app_virtual_env/lib/python3.8/site-packages
         zip -r ../../../../dependencies.zip .
         cd ../../../../
