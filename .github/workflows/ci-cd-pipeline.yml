@@ -68,7 +68,7 @@ jobs:
         virtualenv app_virtual_env
         source ./app_virtual_env/bin/activate
         python -m pip install --upgrade pip
-        pip install -r app/requirements.txt
+        pip install -r requirements.txt
         deactivate
         
 ######################## TEMPORAL ########################
@@ -78,6 +78,7 @@ jobs:
         zip -r ../../../../dependencies.zip .
         cd ../../../../
         zip -r lambda_function_payload.zip app.py dependencies.zip lambda_function.py
+        cd ..
 
     - name: Terraform Init
       run: terraform init
