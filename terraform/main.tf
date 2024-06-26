@@ -71,7 +71,7 @@ resource "aws_api_gateway_integration" "vote_post" {
   http_method             = aws_api_gateway_method.vote_post.http_method
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
-  uri                     = aws_lambda_function.voting_function-jdhg.invoke_arn
+  uri                     = aws_lambda_function.voting_function_jdhg.invoke_arn
 }
 
 resource "aws_api_gateway_integration" "vote_get" {
@@ -80,13 +80,13 @@ resource "aws_api_gateway_integration" "vote_get" {
   http_method             = aws_api_gateway_method.vote_get.http_method
   integration_http_method = "GET"
   type                    = "AWS_PROXY"
-  uri                     = aws_lambda_function.voting_function-jdhg.invoke_arn
+  uri                     = aws_lambda_function.voting_function_jdhg.invoke_arn
 }
 
 resource "aws_lambda_permission" "apigw_post" {
   statement_id  = "AllowAPIGatewayInvokePOST"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.voting_function-jdhg.function_name
+  function_name = aws_lambda_function.voting_function_jdhg.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_api_gateway_rest_api.voting_api.execution_arn}/*/POST/vote"
 }
@@ -100,15 +100,12 @@ resource "aws_lambda_permission" "apigw_get" {
 }
 
 resource "aws_api_gateway_deployment" "voting_api_deployment" {
-  depends_on  = [aws_api_gateway_integration.vote_post]
+  depends_on = [
+    aws_api_gateway_integration.vote_post,
+    aws_api_gateway_integration.vote_get,
+  ]
   rest_api_id = aws_api_gateway_rest_api.voting_api.id
-  stage_name  = "prod"
-}
-
-resource "aws_api_gateway_stage" "voting_api_stage" {
-  deployment_id = aws_api_gateway_deployment.voting_api_deployment.id
-  rest_api_id   = aws_api_gateway_rest_api.voting_api.id
-  stage_name    = "prod"
+  stage_name  = "v1"
 }
 
 output "api_url" {
