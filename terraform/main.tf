@@ -112,7 +112,5 @@ output "api_url" {
   value = aws_api_gateway_deployment.voting_api_deployment.invoke_url
 }
 
-output "lambda_function_arn" {
-  value = aws_lambda_function.voting_function_jdhg.arn
-}
+
 
