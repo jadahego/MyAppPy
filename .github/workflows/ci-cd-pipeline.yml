@@ -22,8 +22,8 @@ jobs:
       env:
         cache-name: cache-pip-modules
       with:
-        path: ~/.app
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/requeriments.txt') }}
+        path: ~/app/app_virtual_env/lib/python3.8/site-packages
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('app/app_virtual_env/lib/python3.8/site-packages') }}
         restore-keys: |
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
@@ -72,7 +72,7 @@ jobs:
         aws-region: ${{ env.AWS_REGION }}
 
 ######################## TEMPORAL ########################
-   
+
         
 ######################## TEMPORAL ########################
     - name: Package Lambda function
