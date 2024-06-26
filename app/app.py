@@ -1,4 +1,4 @@
-from dependencies.flask import Flask, request, jsonify
+from dependencies import Flask, request, jsonify
 
 app = Flask(__name__)
 
