@@ -29,7 +29,7 @@ jobs:
       with:
         python-version: 3.8    
 
-    - name: Install dependencies
+    - name: create venv
       run: |
         python3 -m venv .venv
         source .venv/bin/activate
@@ -43,20 +43,16 @@ jobs:
         pip install pytest
         cp -r .venv/lib/python3.8/site-packages ./app/site-packages
 
+    - name: Move dependencies
+      run: |
+        cp -r ./app/site-packages/* .venv/lib/python3.8/site-packages/
+      
+
     - name: Run tests
       run: |
         source .venv/bin/activate
         cd tests
         pytest
-
-    - if: steps.cache-python.outputs.cache-hit == 'true'    
-      name: Move dependencies
-      run: |
-        cp -r ./app/site-packages/* .venv/lib/python3.8/site-packages/
-        cd tests
-        pytest
-
-    
 
   deploy:
     needs: build
