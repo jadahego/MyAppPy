@@ -99,6 +99,18 @@ resource "aws_lambda_permission" "apigw_get" {
   source_arn    = "${aws_api_gateway_rest_api.voting_api.execution_arn}/*/GET/vote"
 }
 
+resource "aws_api_gateway_deployment" "voting_api_deployment" {
+  depends_on  = [aws_api_gateway_integration.vote_post]
+  rest_api_id = aws_api_gateway_rest_api.voting_api.id
+  stage_name  = "prod"
+}
+
+resource "aws_api_gateway_stage" "voting_api_stage" {
+  deployment_id = aws_api_gateway_deployment.voting_api_deployment.id
+  rest_api_id   = aws_api_gateway_rest_api.voting_api.id
+  stage_name    = "prod"
+}
+
 output "api_url" {
-  value = "${aws_api_gateway_deployment.voting_api_deployment.invoke_url}/vote"
+  value = aws_api_gateway_deployment.voting_api_deployment.invoke_url
 }
