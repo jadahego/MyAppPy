@@ -20,7 +20,7 @@ jobs:
       id: cache-python
       uses: actions/cache@v2
       with:
-        path: ./app_virtual_env/lib/python3.8/site-packages
+        path: ~/app_virtual_env/lib/python3.8/site-packages
         key: ${{ runner.os }}-build-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-build-
@@ -67,13 +67,13 @@ jobs:
     - name: Restore pip cache
       uses: actions/cache@v2
       with:
-        path: ./app_virtual_env/lib/python3.8/site-packages
+        path: ~/app_virtual_env/lib/python3.8/site-packages
         key: ${{ runner.os }}-build-${{ hashFiles('**/requirements.txt') }}
         
 ######################## TEMPORAL ########################
     - name: Package Lambda function
       run: |
-        cd ./app_virtual_env/lib/python3.8/site-packages
+        cd ~/app_virtual_env/lib/python3.8/site-packages
         cp -r * ../../../../
         cd ../../../../
         zip -r lambda_function_payload.zip .
