@@ -38,11 +38,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r ./app/requirements.txt
         pip install pytest
+        cp -r .venv/lib/python3.8/site-packages ./site-packages
 
     - name: Run tests
       run: |
         cd tests
-        source ../.venv/bin/activate
         pytest
     
 
@@ -63,21 +63,12 @@ jobs:
         aws-region: ${{ env.AWS_REGION }}
 
 ######################## TEMPORAL ########################
-
-    - name: Restore pip cache
-      uses: actions/cache@v3
-      with:
-        path: ~/.venv
-        key: ${{ runner.os }}-build-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-build-
         
 ######################## TEMPORAL ########################
     - name: Package Lambda function
       run: |
-        cp -r * .venv
-        zip -r lambda_function_payload.zip app .venv
-        cd ..
+        zip -r lambda_function_payload.zip app site-packages
+      
 
     - name: Terraform Init
       run: terraform init
