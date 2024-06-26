@@ -41,6 +41,7 @@ jobs:
 
     - name: Run tests
       run: |
+        cp -r site-packages/* ./tests/site-packages
         cd tests
         pytest
     
