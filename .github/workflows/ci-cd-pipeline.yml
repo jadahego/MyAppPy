@@ -23,6 +23,7 @@ jobs:
         cache-name: cache-pip-modules
       with:
         path: ~/.app
+          app_virtual_env
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('app/app_virtual_env/lib/python3.8/site-packages') }}
         restore-keys: |
           ${{ runner.os }}-build-${{ env.cache-name }}-
@@ -58,6 +59,15 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+
+    - name: Restore cached virtual environment
+      uses: actions/cache@v3
+      with:
+        path: app_virtual_env
+        key: ${{ runner.os }}-build-${{ hashFiles('app/app_virtual_env/lib/python3.8/site-packages') }}
+        restore-keys: |
+          ${{ runner.os }}-build-
+
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v1
     - name: Configure AWS Credentials
@@ -68,20 +78,7 @@ jobs:
         aws-region: ${{ env.AWS_REGION }}
 
 ######################## TEMPORAL ########################
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-
-    - name: Install dependencies
-      run: |
-        cd app
-        pip install virtualenv
-        virtualenv app_virtual_env
-        source ./app_virtual_env/bin/activate
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        deactivate
+   
         
 ######################## TEMPORAL ########################
     - name: Package Lambda function
