@@ -5,3 +5,7 @@ output "lambda_function_arn" {
 output "api_gateway_url" {
   value = aws_api_gateway_rest_api.voting_api.execution_arn
 }
+
+output "api_url" {
+  value = "${aws_api_gateway_deployment.voting_api_deployment.invoke_url}/vote"
+}
