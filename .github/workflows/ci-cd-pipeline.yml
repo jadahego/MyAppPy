@@ -73,6 +73,8 @@ jobs:
       with:
         path: ~/
         key: ${{ runner.os }}-build-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-build-
         
 ######################## TEMPORAL ########################
     - name: Package Lambda function
