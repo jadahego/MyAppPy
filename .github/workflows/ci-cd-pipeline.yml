@@ -24,7 +24,6 @@ jobs:
     - name: Install dependencies
       run: |
         pip install virtualenv
-        #python -m venv app_virtual_env
         virtualenv app_virtual_env
         source ./app_virtual_env/bin/activate
         python -m pip install --upgrade pip
@@ -47,6 +46,14 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v1
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
 
 ######################## TEMPORAL ########################
     - name: Set up Python
@@ -56,33 +63,25 @@ jobs:
 
     - name: Install dependencies
       run: |
+        cd app
+        pip install virtualenv
+        virtualenv app_virtual_env
+        source ./app_virtual_env/bin/activate
         python -m pip install --upgrade pip
-        pip install --target app/dependencies -r app/requirements.txt
+        pip install -r app/requirements.txt
+        deactivate
         
 ######################## TEMPORAL ########################
-
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
-
-    - name: Set up Terraform
-      uses: hashicorp/setup-terraform@v1
+    - name: Package Lambda function
+      run: |
+        cd app_virtual_env/lib/python3.8/site-packages
+        zip -r ../../../../dependencies.zip .
+        cd ../../../../
+        zip -r lambda_function_payload.zip app.py dependencies.zip lambda_function.py
 
     - name: Terraform Init
       run: terraform init
       working-directory: terraform/
-
-    - name: Package Lambda function
-      run: |
-        cd app
-        # zip -r ../lambda_function_payload.zip .
-        cd dependencies
-        zip -r ../dependencies.zip .
-        cd ..
-        zip -r lambda_function_payload.zip app.py dependencies.zip lambda_function.py
 
     - name: Terraform Apply
       run: terraform apply -auto-approve
