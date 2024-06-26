@@ -46,7 +46,13 @@ jobs:
         source ../.venv/bin/activate
         cp -r ./app/site-packages/* ./tests/site-packages
         pytest
-    
+
+    - if: steps.cache-python.outputs.cache-hit == 'true'
+      name: Run tests 2
+      run: |
+        cp -r ./app/site-packages/* ./tests/site-packages
+        cd tests
+        pytest
 
   deploy:
     needs: build
