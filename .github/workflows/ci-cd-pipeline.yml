@@ -34,23 +34,19 @@ jobs:
     - if: ${{ steps.cache-python.outputs.cache-hit != 'true' }}
       name: Install dependencies
       run: |
-        apt install python-version: 3.8
-        pip install virtualenv
-        virtualenv app_virtual_env
+        sudo apt-get update
+        sudo apt-get install python3.8-venv  
+        python3.8 -m venv app_virtual_env     
         source ./app_virtual_env/bin/activate
         python -m pip install --upgrade pip
         pip install -r app/requirements.txt
         pip install pytest
-      
-
-    
 
     - name: Run tests
       run: |
         cd tests
         source ../app_virtual_env/bin/activate
         pytest
-    
 
   deploy:
     needs: build
@@ -59,8 +55,10 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v1
+
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
@@ -68,10 +66,9 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
-######################## TEMPORAL ########################
-
-        
-######################## TEMPORAL ########################
+    - name: Cache
+      uses: Cache Python dependencies
+      
     - name: Package Lambda function
       run: |
         cd app/app_virtual_env/lib/python3.8/site-packages
