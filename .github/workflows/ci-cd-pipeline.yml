@@ -20,7 +20,7 @@ jobs:
       id: cache-python
       uses: actions/cache@v2
       with:
-        path: ./app_virtual_env/lib/python3.8/site-packages
+        path: ./app/app_virtual_env/lib/python3.8/site-packages
         key: ${{ runner.os }}-build-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-build-
@@ -33,6 +33,7 @@ jobs:
     - if: steps.cache-python.outputs.cache-hit != 'true'
       name: Install dependencies
       run: |
+        cd app
         python -m venv app_virtual_env
         source app_virtual_env/bin/activate
         python -m pip install --upgrade pip
@@ -41,7 +42,7 @@ jobs:
 
     - name: Run tests
       run: |
-        source ./app_virtual_env/bin/activate
+        source ./app/app_virtual_env/bin/activate
         cd tests
         pytest
     
@@ -71,7 +72,7 @@ jobs:
     - name: Restore pip cache
       uses: actions/cache@v2
       with:
-        path: ./app_virtual_env/lib/python3.8/site-packages
+        path: ./app/app_virtual_env/lib/python3.8/site-packages
         key: ${{ runner.os }}-build-${{ hashFiles('**/requirements.txt') }}
         
 ######################## TEMPORAL ########################
