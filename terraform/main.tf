@@ -27,7 +27,7 @@ resource "aws_iam_role_policy_attachment" "lambda_exec-jdhg_policy" {
 }
 
 resource "aws_lambda_function" "voting_function-jdhg" {
-  filename         = "../app/lambda_function_payload.zip" 
+  filename         = "../lambda_function_payload.zip" 
   function_name    = "votingFunctionjdhg"
   role             = aws_iam_role.lambda_exec-jdhg.arn
   handler          = "lambda_function.lambda_handler"
