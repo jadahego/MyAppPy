@@ -41,7 +41,7 @@ jobs:
 
     - name: Run tests
       run: |
-        source ./app_virtual_env/bin/activate
+        source app_virtual_env/bin/activate
         cd tests
         pytest
     
