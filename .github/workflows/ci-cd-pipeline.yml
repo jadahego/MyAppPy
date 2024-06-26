@@ -20,9 +20,9 @@ jobs:
       id: cache-python
       uses: actions/cache@v3
       with:
-        path: .venv
-        key: ${{ runner.os }}-2-build-${{ hashFiles('app/requirements.txt') }}
-        restore-keys: ${{ runner.os }}-2-build-
+        path: site-packages
+        key: ${{ runner.os }}-1-build-${{ hashFiles('app/requirements.txt') }}
+        restore-keys: ${{ runner.os }}-1-build-
     
     - name: Set up Python
       uses: actions/setup-python@v2
@@ -37,11 +37,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r ./app/requirements.txt
         pip install pytest
+        cp -r .venv/lib/python3.8/site-packages ./site-packages
 
     - name: Run tests
       run: |
         cd tests
-        source ../.venv/bin/activate
         pytest
     
 
@@ -67,9 +67,9 @@ jobs:
       id: cache-python
       uses: actions/cache@v3
       with:
-        path: .venv
-        key: ${{ runner.os }}-2-build-${{ hashFiles('app/requirements.txt') }}
-        restore-keys: ${{ runner.os }}-2-build-
+        path: site-packages
+        key: ${{ runner.os }}-1-build-${{ hashFiles('app/requirements.txt') }}
+        restore-keys: ${{ runner.os }}-1-build-
 
     - if: steps.cache-python.outputs.cache-hit != 'true'
       name: Install dependencies
@@ -79,12 +79,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r ./app/requirements.txt
         pip install pytest
+        cp -r .venv/lib/python3.8/site-packages ./site-packages
 
 ######################## TEMPORAL ########################
     - name: Package Lambda function
       run: |
+       cp -r site-packages/* ./app/site-packages
        cd app
-       cp -r .venv/lib/python3.8/site-packages/* .
+       cp -r site-packages/* .
        zip -r lambda_function_payload.zip .
        cd ..
       
