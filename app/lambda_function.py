@@ -34,17 +34,17 @@ def lambda_handler(event, context):
         }
 
     # Manejar el evento con awsgi
-    ###try:
+    try:
         return awsgi.response(app, event, context)
-    #except Exception as e:
+    except Exception as e:
         # Manejar cualquier excepción no anticipada y devolver un error 500
-      #  error_message = f"Internal server error: {str(e)}"
-       # print(error_message)  # Para registro en los logs de CloudWatch
-        #return {
-          #  'statusCode': 500,
-           # 'body': json.dumps({
-           #     'errorMessage': error_message,
-            #    'event': event
-           # })
-       # }
+        error_message = f"Internal server error: {str(e)}"
+        print(error_message)  # Para registro en los logs de CloudWatch
+        return {
+            'statusCode': 500,
+            'body': json.dumps({
+                'errorMessage': error_message,
+                'event': event
+            })
+        }
 
