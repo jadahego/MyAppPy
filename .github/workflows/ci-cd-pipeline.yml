@@ -63,7 +63,11 @@ jobs:
         aws-region: ${{ env.AWS_REGION }}
 
 ######################## TEMPORAL ########################
-
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+        
     - name: Restore pip cache
       uses: actions/cache@v2
       with:
