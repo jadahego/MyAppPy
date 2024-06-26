@@ -72,8 +72,7 @@ jobs:
 ######################## TEMPORAL ########################
     - name: Package Lambda function
       run: |
-        cd app
-        cd ./app_virtual_env/lib/python3.8/site-packages
+        cd app/app_virtual_env/lib/python3.8/site-packages
         cp -r * ../../../../
         cd ../../../../
         zip -r lambda_function_payload.zip .
