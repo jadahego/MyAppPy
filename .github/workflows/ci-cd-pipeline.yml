@@ -23,7 +23,9 @@ jobs:
 
     - name: Install dependencies
       run: |
-        python -m venv app_virtual_env
+        pip install virtualenv
+        #python -m venv app_virtual_env
+        virtualenv app_virtual_env
         source ./app_virtual_env/bin/activate
         python -m pip install --upgrade pip
         pip install -r app/requirements.txt
@@ -34,7 +36,7 @@ jobs:
     - name: Run tests
       run: |
         cd tests
-        source ./app_virtual_env/bin/activate
+        #source ../app_virtual_env/bin/activate
         pytest
     
 
