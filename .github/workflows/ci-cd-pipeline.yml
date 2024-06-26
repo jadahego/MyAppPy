@@ -85,7 +85,7 @@ jobs:
 
     - name: Terraform Apply
       run: terraform apply -auto-approve
-      working-directory: terraform/z
+      working-directory: terraform/
 
     - name: Upload Lambda package to S3
       run: |
