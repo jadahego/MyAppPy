@@ -5,4 +5,4 @@ import awsgi
 def lambda_handler(event, context):      
     #search_path = sys.path
     #print(search_path)
-    return awsgi.response(app, event, context)
+    return awsgi.handle_request(app, event, context)
