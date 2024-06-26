@@ -76,8 +76,7 @@ jobs:
         cd ./app_virtual_env/lib/python3.8/site-packages
         cp -r * ../../../../
         cd ../../../../
-        cd ..
-        zip -r lambda_function_payload.zip app.py lambda_function.py requirements.txt
+        zip -r lambda_function_payload.zip .
         cd ..
 
     - name: Terraform Init
@@ -90,7 +89,7 @@ jobs:
 
     - name: Upload Lambda package to S3
       run: |
-        aws s3 cp ./lambda_function_payload.zip s3://bbog-my-lambda-functions-bucket-jdhg/
+        aws s3 cp ./app/lambda_function_payload.zip s3://bbog-my-lambda-functions-bucket-jdhg/
 
     - name: Update Lambda function code
       run: |
