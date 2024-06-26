@@ -33,10 +33,11 @@ jobs:
     - if: steps.cache-python.outputs.cache-hit != 'true'
       name: Install dependencies
       run: |
+        cd ./app
         python3 -m venv .venv
         source .venv/bin/activate
         python -m pip install --upgrade pip
-        pip install -r ./app/requirements.txt
+        pip install -r ./requirements.txt
         pip install pytest
 
     - name: Run tests
