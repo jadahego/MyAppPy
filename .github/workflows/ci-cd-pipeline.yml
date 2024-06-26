@@ -41,7 +41,7 @@ jobs:
 
     - name: Run tests
       run: |
-        cp -r app/site-packages/* ./tests/site-packages
+        cp -r ./app/site-packages/* ./tests/site-packages
         cd tests
         source ../.venv/bin/activate
         pytest
