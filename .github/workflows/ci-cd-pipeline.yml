@@ -46,11 +46,11 @@ jobs:
     - name: Move dependencies
       run: |
         cp -r ./app/site-packages/* .venv/lib/python3.8/site-packages/
-        ls -l .venv/lib/python3.8/site-packages
       
 
     - name: Run tests
       run: |
+        ls -la
         cd tests
         source ../.venv/bin/activate
         pytest
