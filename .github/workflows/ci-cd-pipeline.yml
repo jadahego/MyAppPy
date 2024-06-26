@@ -18,9 +18,9 @@ jobs:
 
     - name: Cache Python dependencies
       id: cache-python
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
-        path: ~/
+        path: ~/.venv
         key: ${{ runner.os }}-build-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-build-
@@ -65,9 +65,9 @@ jobs:
 ######################## TEMPORAL ########################
 
     - name: Restore pip cache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
-        path: ~/
+        path: ~/.venv
         key: ${{ runner.os }}-build-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-build-
