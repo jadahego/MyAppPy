@@ -38,7 +38,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r ./app/requirements.txt
         pip install pytest
-        cp -r .venv/lib/python3.8/site-packages ./site-packages
+        cp -r .venv/lib/python3.8/site-packages ./app/site-packages
 
     - name: Run tests
       run: |
@@ -68,7 +68,8 @@ jobs:
 ######################## TEMPORAL ########################
     - name: Package Lambda function
       run: |
-        zip -r lambda_function_payload.zip app site-packages
+       cd app 
+       zip -r lambda_function_payload.zip app 
       
 
     - name: Terraform Init
@@ -81,7 +82,7 @@ jobs:
 
     - name: Upload Lambda package to S3
       run: |
-        aws s3 cp ./lambda_function_payload.zip s3://bbog-my-lambda-functions-bucket-jdhg/
+        aws s3 cp ./app/lambda_function_payload.zip s3://bbog-my-lambda-functions-bucket-jdhg/
 
     - name: Update Lambda function code
       run: |
