@@ -16,6 +16,24 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Cache pip modules
+      id: cache-pip
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-pip-modules
+      with:
+        path: ~/.pip
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    - if: ${{ steps.cache-pip.outputs.cache-hit != 'true' }}
+      name: List the state of pip modules
+      continue-on-error: true
+      run: pip list
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -54,20 +72,7 @@ jobs:
         aws-region: ${{ env.AWS_REGION }}
 
 ######################## TEMPORAL ########################
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-
-    - name: Install dependencies
-      run: |
-        cd app
-        pip install virtualenv
-        virtualenv app_virtual_env
-        source ./app_virtual_env/bin/activate
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        deactivate
+ 
         
 ######################## TEMPORAL ########################
     - name: Package Lambda function
