@@ -21,34 +21,37 @@ jobs:
       uses: actions/cache@v3
       with:
         path: app/site-packages
-        key: ${{ runner.os }}-1-build-${{ hashFiles('app/requirements.txt') }}
-        restore-keys: ${{ runner.os }}-1-build-
+        key: ${{ runner.os }}-4-build-${{ hashFiles('app/requirements.txt') }}
+        restore-keys: ${{ runner.os }}-4-build-
     
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: 3.8    
+
+    - name: Install dependencies
+      run: |
+        python3 -m venv .venv
+        source .venv/bin/activate
         
     - if: steps.cache-python.outputs.cache-hit != 'true'
       name: Install dependencies
       run: |
-        python3 -m venv .venv
         source .venv/bin/activate
         python -m pip install --upgrade pip
         pip install -r ./app/requirements.txt
         pip install pytest
         cp -r .venv/lib/python3.8/site-packages ./app/site-packages
 
-    - name: Run tests
+    - name: Move dependencies
       run: |
+        cp -r ./app/site-packages/* .venv/lib/python3.8/site-packages/
         cd tests
-        source ../.venv/bin/activate
         pytest
 
-    - if: steps.cache-python.outputs.cache-hit == 'true'
-      name: Run tests 2
+    - name: Run tests
       run: |
-        cp -r ./app/site-packages ./tests/site-packages
+        source .venv/bin/activate
         cd tests
         pytest
 
@@ -68,15 +71,13 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
-######################## TEMPORAL ########################
-
     - name: Cache Python dependencies
       id: cache-python
       uses: actions/cache@v3
       with:
         path: app/site-packages
-        key: ${{ runner.os }}-1-build-${{ hashFiles('app/requirements.txt') }}
-        restore-keys: ${{ runner.os }}-1-build-
+        key: ${{ runner.os }}-4-build-${{ hashFiles('app/requirements.txt') }}
+        restore-keys: ${{ runner.os }}-4-build-
 
     - if: steps.cache-python.outputs.cache-hit != 'true'
       name: Install dependencies
@@ -88,14 +89,12 @@ jobs:
         pip install pytest
         cp -r .venv/lib/python3.8/site-packages ./app/site-packages
 
-######################## TEMPORAL ########################
     - name: Package Lambda function
       run: |
        cd app
        cp -r site-packages/* .
        zip -r lambda_function_payload.zip .
        cd ..
-      
 
     - name: Terraform Init
       run: terraform init
