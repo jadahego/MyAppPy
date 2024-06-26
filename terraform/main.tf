@@ -31,7 +31,7 @@ resource "aws_lambda_function" "voting_function-jdhg" {
   function_name    = "votingFunctionjdhg"
   role             = aws_iam_role.lambda_exec-jdhg.arn
   handler          = "lambda_function.lambda_handler"
-  source_code_hash = filebase64sha256("../app/lambda_function_payload.zip")
+  source_code_hash = filebase64sha256("../lambda_function_payload.zip")
   runtime          = "python3.8"
   environment {
     variables = {
