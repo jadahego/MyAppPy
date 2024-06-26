@@ -76,7 +76,7 @@ jobs:
     - name: Package Lambda function
       run: |
         cp -r * .venv
-        zip -r lambda_function_payload.zip app .venv/lib
+        zip -r lambda_function_payload.zip app .venv
         cd ..
 
     - name: Terraform Init
