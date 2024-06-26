@@ -81,7 +81,7 @@ jobs:
 
     - name: Upload Lambda package to S3
       run: |
-        aws s3 cp ./app/lambda_function_payload.zip s3://bbog-my-lambda-functions-bucket-jdhg/
+        aws s3 cp ./lambda_function_payload.zip s3://bbog-my-lambda-functions-bucket-jdhg/
 
     - name: Update Lambda function code
       run: |
