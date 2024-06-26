@@ -32,19 +32,18 @@ jobs:
           ${{ runner.os }}-
 
     - if: ${{ steps.cache-python.outputs.cache-hit != 'true' }}
-      name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-
-    - name: Install dependencies
+      name: Install dependencies
       run: |
+        apt install python-version: 3.8
         pip install virtualenv
         virtualenv app_virtual_env
         source ./app_virtual_env/bin/activate
         python -m pip install --upgrade pip
         pip install -r app/requirements.txt
         pip install pytest
+      
+
+    
 
     - name: Run tests
       run: |
