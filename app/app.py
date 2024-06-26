@@ -15,7 +15,7 @@ def vote():
     if option in votes:
         votes[option] += 1
         return jsonify({"message": "Vote counted!"}), 200
-    return jsonify({"message": "Invalid option "+ option}), 400
+    return jsonify({"message": "Invalid option"}), 400
 
 @app.route('/results', methods=['GET'])
 def results():
