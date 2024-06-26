@@ -77,7 +77,6 @@ jobs:
 ######################## TEMPORAL ########################
     - name: Package Lambda function
       run: |
-        cd ~/
         cd .venv/lib/python3.8/site-packages
         cp -r * ../../../../
         cd ../../../../
