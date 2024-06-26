@@ -75,7 +75,7 @@ jobs:
 ######################## TEMPORAL ########################
     - name: Package Lambda function
       run: |
-        cp -r * .venv/lib
+        cp -r * .venv
         zip -r lambda_function_payload.zip app .venv/lib
         cd ..
 
