@@ -58,6 +58,13 @@ resource "aws_api_gateway_method" "vote_post" {
   authorization = "NONE"
 }
 
+resource "aws_api_gateway_method" "vote_get" {
+  rest_api_id   = aws_api_gateway_rest_api.voting_api.id
+  resource_id   = aws_api_gateway_resource.vote.id
+  http_method   = "GET"
+  authorization = "NONE"
+}
+
 resource "aws_api_gateway_integration" "vote_post" {
   rest_api_id             = aws_api_gateway_rest_api.voting_api.id
   resource_id             = aws_api_gateway_resource.vote.id
@@ -67,12 +74,29 @@ resource "aws_api_gateway_integration" "vote_post" {
   uri                     = aws_lambda_function.voting_function-jdhg.invoke_arn
 }
 
-resource "aws_lambda_permission" "apigw" {
-  statement_id  = "AllowAPIGatewayInvoke"
+resource "aws_api_gateway_integration" "vote_get" {
+  rest_api_id             = aws_api_gateway_rest_api.voting_api.id
+  resource_id             = aws_api_gateway_resource.vote.id
+  http_method             = aws_api_gateway_method.vote_get.http_method
+  integration_http_method = "GET"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.voting_function-jdhg.invoke_arn
+}
+
+resource "aws_lambda_permission" "apigw_post" {
+  statement_id  = "AllowAPIGatewayInvokePOST"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.voting_function-jdhg.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_api_gateway_rest_api.voting_api.execution_arn}/*/*"
+  source_arn    = "${aws_api_gateway_rest_api.voting_api.execution_arn}/*/POST/vote"
+}
+
+resource "aws_lambda_permission" "apigw_get" {
+  statement_id  = "AllowAPIGatewayInvokeGET"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.voting_function-jdhg.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_api_gateway_rest_api.voting_api.execution_arn}/*/GET/vote"
 }
 
 output "api_url" {
