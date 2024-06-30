@@ -1,11 +1,13 @@
 import unittest
 import sys
 import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../app')))
-
-from app import app, votes
 import json
 
+# Asegúrate de que el directorio de la aplicación esté en el path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../app')))
+
+# Importa la aplicación y cualquier configuración necesaria
+from app import app, votes
 
 class TestVotingApp(unittest.TestCase):
 

@@ -47,7 +47,12 @@ jobs:
       run: |
         cp -r ./app/site-packages/* .venv/lib/python3.8/site-packages/
       
-
+    - name: Set up environment variables
+      env:
+          SQLALCHEMY_DATABASE_URI: mysql+pymysql://username:password@host:port/database_name
+      run: |
+          echo "export SQLALCHEMY_DATABASE_URI=$SQLALCHEMY_DATABASE_URI" >> $GITHUB_ENV
+          
     - name: Run tests
       run: |
         cd tests
