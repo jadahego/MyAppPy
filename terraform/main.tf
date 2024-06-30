@@ -36,6 +36,7 @@ resource "aws_lambda_function" "voting_function_jdhg" {
   environment {
     variables = {
       FLASK_ENV = "production"
+      SQLALCHEMY_DATABASE_URI = "mysql+pymysql://jdhg:jdhgomez@${aws_db_instance.mydb.endpoint}/mydb"
     }
   }
 }
