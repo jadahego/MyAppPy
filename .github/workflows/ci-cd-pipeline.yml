@@ -39,6 +39,7 @@ jobs:
       run: |
         source .venv/bin/activate
         python -m pip install --upgrade pip
+        pip install python-dotenv
         pip install -r ./app/requirements.txt
         pip install pytest
         cp -r .venv/lib/python3.8/site-packages ./app/site-packages
