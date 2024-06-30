@@ -1,3 +1,5 @@
 Flask
 boto3
 aws-wsgi
+Flask-SQLAlchemy
+pymysql
