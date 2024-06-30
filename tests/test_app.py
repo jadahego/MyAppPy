@@ -2,9 +2,13 @@ import unittest
 import sys
 import os
 import json
+from dotenv import load_dotenv
 
 # Asegúrate de que el directorio de la aplicación esté en el path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../app')))
+
+# Carga las variables de entorno desde .env (opcional, solo para desarrollo local)
+load_dotenv()
 
 # Importa la aplicación y cualquier configuración necesaria
 from app import app, votes
