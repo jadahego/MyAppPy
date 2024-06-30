@@ -5,7 +5,7 @@ import json
 from dotenv import load_dotenv
 
 # Asegúrate de que el directorio de la aplicación esté en el path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../app')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../app/app.py')))
 
 # Carga las variables de entorno desde .env (opcional, solo para desarrollo local)
 load_dotenv()
