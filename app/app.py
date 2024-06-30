@@ -8,8 +8,11 @@ logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
 
-# Configurar la conexión a la base de datos MySQL en RDS
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLALCHEMY_DATABASE_URI']
+# Configurar la conexión a la base de datos MySQL en RDS o localmente
+if 'SQLALCHEMY_DATABASE_URI' in os.environ:
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLALCHEMY_DATABASE_URI']
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///local.db'  # Para pruebas locales con SQLite
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -22,7 +25,7 @@ class Vote(db.Model):
 
     def __init__(self, option):
         self.option = option
-        self.count = 0 
+        self.count = 0
 
 # Crear todas las tablas y añadir opciones iniciales si no existen
 with app.app_context():
@@ -65,4 +68,3 @@ def results():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=3000, debug=True)
-
