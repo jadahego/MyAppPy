@@ -22,7 +22,7 @@ class Vote(db.Model):
 
     def __init__(self, option):
         self.option = option
-        self.count = 0
+        self.count = 0 
 
 # Crear todas las tablas y añadir opciones iniciales si no existen
 with app.app_context():
