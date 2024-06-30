@@ -48,7 +48,6 @@ jobs:
       run: |
         cp -r ./app/site-packages/* .venv/lib/python3.8/site-packages/
       
-  
           
     - name: Run tests
       run: |
