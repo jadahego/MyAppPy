@@ -11,7 +11,10 @@ app = Flask(__name__)
 # Configurar la conexión a la base de datos MySQL en RDS o localmente
 if 'SQLALCHEMY_DATABASE_URI' in os.environ:
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLALCHEMY_DATABASE_URI']
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///local.db'  # Para pruebas locales con SQLite
 
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
 
 # Inicializar la instancia de SQLAlchemy
