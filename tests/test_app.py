@@ -48,7 +48,7 @@ class TestVotingApp(unittest.TestCase):
         data = json.dumps({'option': 'invalid_option'})
         response = self.app.post('/vote', data=data, content_type='application/json')
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json['message'], 'Invalid option')
+        self.assertEqual(response.json['message'], 'No option provided')
 
     def test_results(self):
         response = self.app.get('/results')

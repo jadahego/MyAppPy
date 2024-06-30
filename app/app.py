@@ -15,6 +15,7 @@ else:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///local.db'  # Para pruebas locales con SQLite
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# Inicializar la instancia de SQLAlchemy
 db = SQLAlchemy(app)
 
 # Modelo de datos para los votos
